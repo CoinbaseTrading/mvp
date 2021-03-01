@@ -14,6 +14,7 @@ if __name__ == "__main__":
     user = os.getenv("PG_USER")
     password = os.getenv("PG_PASSWORD")
     lookback = int(os.getenv("LOOKBACK", 1))
+    cb_client = CoinbaseClient()
 
     for product_id in (
         "BTC-USD",
@@ -27,7 +28,6 @@ if __name__ == "__main__":
         "XLM-USD",
         "ATOM-USD",
     ):
-        cb_client = CoinbaseClient()
         cb_client.download_candles(
             f"/tmp/candles_{product_id}.csv", product_id=product_id, lookback=lookback
         )
