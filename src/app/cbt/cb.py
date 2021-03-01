@@ -32,7 +32,7 @@ class CoinbaseClient:
         with open(target_file, "w") as f:
             writer = csv.writer(f, delimiter=delimiter)
             for start_time, end_time in yield_batch(now, lookback, granularity):
-                logging.info(f"Getting data for interval {start_time} to {end_time}...")
+                logging.info(f"Getting {product_id} data for interval {start_time} to {end_time}...")
                 response = requests.get(
                     f"https://api.pro.coinbase.com/products/{product_id}/candles",
                     params={
