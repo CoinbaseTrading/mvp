@@ -23,6 +23,7 @@ if __name__ == "__main__":
         "EOS-USD",
         "DASH-USD",
         "OXT-USD",
+        "MKR-USD",
         "XLM-USD",
         "ATOM-USD",
     ):

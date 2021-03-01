@@ -28,7 +28,7 @@ class PostgresClient:
 
     def execute_sql(self, sql_file):
 
-        logging.info(f"Executing {sql_file}")
+        logging.info(f"Executing {sql_file}...")
         conn = self._get_connection()
         with open(sql_file) as f:
             with conn:
