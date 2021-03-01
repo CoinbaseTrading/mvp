@@ -12,7 +12,7 @@ class PostgresClient:
         self.password = password
         self.port = port
 
-    def _get_connection(self):
+    def get_connection(self):
         return psycopg2.connect(
             host=self.host, database=self.database, user=self.user, password=self.password, port=self.port
         )
@@ -20,7 +20,7 @@ class PostgresClient:
     def copy_from(self, file, table, sep="|"):
 
         logging.info(f"Copying data from {file} to {table}...")
-        conn = self._get_connection()
+        conn = self.get_connection()
         with open(file) as f:
             with conn:
                 with conn.cursor() as curs:
@@ -29,7 +29,7 @@ class PostgresClient:
     def execute_sql(self, sql_file):
 
         logging.info(f"Executing {sql_file}...")
-        conn = self._get_connection()
+        conn = self.get_connection()
         with open(sql_file) as f:
             with conn:
                 with conn.cursor() as curs:

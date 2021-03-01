@@ -17,7 +17,7 @@ class CoinbaseClient:
         target_file,
         product_id="BTC-USD",
         granularity=60,
-        lookback=1,
+        days_to_load=1,
         delimiter="|",
         sleep_seconds=0.2,
     ):
@@ -31,7 +31,7 @@ class CoinbaseClient:
         now = datetime.now(timezone.utc)
         with open(target_file, "w") as f:
             writer = csv.writer(f, delimiter=delimiter)
-            for start_time, end_time in yield_batch(now, lookback, granularity):
+            for start_time, end_time in yield_batch(now, days_to_load, granularity):
                 logging.info(f"Getting {product_id} data for interval {start_time} to {end_time}...")
                 response = requests.get(
                     f"https://api.pro.coinbase.com/products/{product_id}/candles",

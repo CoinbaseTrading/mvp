@@ -13,8 +13,8 @@ if __name__ == "__main__":
     database = os.getenv("PG_DATABASE")
     user = os.getenv("PG_USER")
     password = os.getenv("PG_PASSWORD")
-    lookback = int(os.getenv("LOOKBACK", 1))
-    
+    days_to_load = int(os.getenv("DAYS_TO_LOAD", 1))
+
     cb_client = CoinbaseClient()
     pg_client = PostgresClient(host, database, user, password)
     pg_client.execute_sql("/app/sql/create_objects.sql")
@@ -32,7 +32,7 @@ if __name__ == "__main__":
         "ATOM-USD",
     ):
         cb_client.download_candles(
-            f"/tmp/candles_{product_id}.csv", product_id=product_id, lookback=lookback
+            f"/tmp/candles_{product_id}.csv", product_id=product_id, days_to_load=days_to_load
         )
         pg_client.copy_from(f"/tmp/candles_{product_id}.csv", "landing.candles")
 
