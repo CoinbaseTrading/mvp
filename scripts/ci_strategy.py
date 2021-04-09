@@ -1,11 +1,9 @@
 from datetime import timedelta
-
 import os
-import pandas as pd
-import numpy as np
 
-from cbt import slack
-from cbt.pg import PostgresClient
+import numpy as np
+import pandas as pd
+import psycopg2
 
 if __name__ == "__main__":
 
@@ -13,28 +11,21 @@ if __name__ == "__main__":
     database = os.getenv("PG_DATABASE")
     user = os.getenv("PG_USER")
     password = os.getenv("PG_PASSWORD")
-    slack_bot_token = os.getenv("SLACK_BOT_TOKEN")
-    slack_channel = os.getenv("SLACK_CHANNEL")
-    lookback_days = int(os.getenv("LOOKBACK_DAYS", 5))
+    lookback_days = int(os.getenv("LOOKBACK_DAYS", 10))
 
-    pg_client = PostgresClient(
-        host=host,
-        database=database,
-        user=user,
-        password=password,
+    conn = psycopg2.connect(
+        host=host, database=database, user=user, password=password, port=25060
     )
-
-    conn = pg_client.get_connection()
     curs = conn.cursor()
 
     product_info = curs.execute(
         """
         SELECT
-            TRIM(product_id),
-            TO_TIMESTAMP(MIN(time)) AS min_timestamp,
-            TO_TIMESTAMP(MAX(time)) AS max_timestamp,
+            product_id,
+            min(ts) AS min_timestamp,
+            max(ts) AS max_timestamp,
             COUNT(*) AS samples
-        FROM ods.candles
+        FROM dm.candles
         GROUP BY product_id
         """
     )
@@ -51,10 +42,10 @@ if __name__ == "__main__":
     price_info = curs.execute(
         """
         SELECT
-            TRIM(product_id),
+            product_id,
             time,
             close
-        FROM ods.candles
+        FROM dm.candles
         WHERE time BETWEEN {min_time} AND {max_time}
         ORDER BY product_id, time
         """.format(
@@ -139,7 +130,4 @@ if __name__ == "__main__":
         last_price=best_coin["last_price"].values[0],
     )
 
-    if slack_bot_token and slack_channel:
-        slack.post_to_channel(slack_bot_token, slack_channel, message)
-    else:
-        print(message)
+    print(message)
