@@ -22,12 +22,6 @@ docker-compose up --build --remove-orphans load_candles
 ```
 To adjust the "days to load", update the docker-compose.yaml file.
 
-To run the CI strategy, run:
-```shell
-docker-compose up --build --remove-orphans ci_strategy
-```
-To adjust the "lookback days", update the docker-compose.yaml file.
-
 # Unit testing
 
 To run unit tests, you can use:
