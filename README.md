@@ -1,6 +1,6 @@
-# MVP
+# Candles
 
-This repo contains the MVP for the Coinbase trading effort.
+This repo contains the code used to load candles data from Coinbase.
 
 # Local setup
 
