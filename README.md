@@ -1,6 +1,6 @@
 # Candles
 
-This repo contains the code used to load candles data from Coinbase.
+This repo contains the code used to load candles data from Coinbase into our Postgres database.
 
 # Local setup
 
