@@ -47,3 +47,14 @@ class CoinbaseClient:
 
                 # sleeping to avoid hitting the rate limit
                 sleep(sleep_seconds)
+
+    @staticmethod
+    def yield_products(suffix):
+
+        response = requests.get("https://api.pro.coinbase.com/products")
+        if response.status_code == 200:
+            for d in response.json():
+                if d.get("id").endswith(suffix):
+                    yield d.get("id")
+        else:
+            logging.warn(f"Status code: {response.status_code}")

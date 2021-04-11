@@ -19,18 +19,7 @@ if __name__ == "__main__":
     pg_client = PostgresClient(host, database, user, password)
     pg_client.execute_sql("/app/sql/create_objects.sql")
 
-    for product_id in (
-        "BTC-USD",
-        "ETH-USD",
-        "LTC-USD",
-        "BCH-USD",
-        "EOS-USD",
-        "DASH-USD",
-        "OXT-USD",
-        "MKR-USD",
-        "XLM-USD",
-        "ATOM-USD",
-    ):
+    for product_id in cb_client.yield_products("USD"):
         cb_client.download_candles(
             f"/tmp/candles_{product_id}.csv", product_id=product_id, days_to_load=days_to_load
         )

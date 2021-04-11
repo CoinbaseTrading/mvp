@@ -1,6 +1,6 @@
-# Coinbase data load
+# Candles
 
-This repo contains the code used to load data from Coinbase into our Postgres database.
+This repo contains the code to load candles data from Coinbase Pro into our Postgres database.
 
 # Local setup
 
@@ -10,8 +10,6 @@ PG_HOST
 PG_DATABASE
 PG_USER
 PG_PASSWORD
-SLACK_BOT_TOKEN
-SLACK_CHANNEL
 ```
 
 # Running locally with docker
