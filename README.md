@@ -1,4 +1,4 @@
-# Candles
+# Coinbase data load
 
 This repo contains the code used to load data from Coinbase into our Postgres database.
 
