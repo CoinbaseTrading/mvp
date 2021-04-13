@@ -1,25 +1,16 @@
-import csv
-from datetime import datetime, timezone
 import logging
-from time import sleep
 
 import requests
-
-from cbt.utils.candles import yield_batch
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 
 class CoinbaseClient:
     def __init__(self):
         pass
 
-    def download_candles(
-        self,
-        target_file,
-        product_id="BTC-USD",
-        granularity=60,
-        days_to_load=1,
-        delimiter="|",
-        sleep_seconds=0.2,
+    def get_candles(
+        self, start_time, end_time, product_id="BTC-USD", granularity=60,
     ):
 
         valid = [60, 300, 900, 3600, 21600, 86400]
@@ -28,25 +19,26 @@ class CoinbaseClient:
                 f"Granularity must be one of the following values {' '.join(valid)}"
             )
 
-        now = datetime.now(timezone.utc)
-        with open(target_file, "w") as f:
-            writer = csv.writer(f, delimiter=delimiter)
-            for start_time, end_time in yield_batch(now, days_to_load, granularity):
-                logging.info(f"Getting {product_id} data for interval {start_time} to {end_time}...")
-                response = requests.get(
-                    f"https://api.pro.coinbase.com/products/{product_id}/candles",
-                    params={
-                        "start": start_time.isoformat(),
-                        "end": end_time.isoformat(),
-                        "granularity": granularity,
-                    },
-                )
-                data = response.json()
-                for row in data:
-                    writer.writerow([product_id] + row + [now.isoformat()])
+        logging.info(
+            f"Getting {product_id} data for interval {start_time} to {end_time}..."
+        )
 
-                # sleeping to avoid hitting the rate limit
-                sleep(sleep_seconds)
+        s = requests.Session()
+        retries = Retry(total=5, backoff_factor=1, status_forcelist=[429])
+        s.mount("https://", HTTPAdapter(max_retries=retries))
+
+        response = s.get(
+            f"https://api.pro.coinbase.com/products/{product_id}/candles",
+            params={
+                "start": start_time.isoformat(),
+                "end": end_time.isoformat(),
+                "granularity": granularity,
+            },
+        )
+        if response.status_code == 200:
+            return response.json()
+        else:
+            raise Exception(response.status_code)
 
     @staticmethod
     def yield_products(suffix):
