@@ -30,6 +30,7 @@ if __name__ == "__main__":
                 data = cb_client.get_candles(start_time, end_time, product_id=product_id)
                 for row in data:
                     writer.writerow([product_id] + row + [created_time])
+                    
             pg_client.execute_sql("/app/sql/truncate_landing_candles.sql")
             pg_client.copy_from("/tmp/candles.csv", "landing.candles")
             os.remove("/tmp/candles.csv")

@@ -49,4 +49,4 @@ class CoinbaseClient:
                 if d.get("id").endswith(suffix):
                     yield d.get("id")
         else:
-            logging.warn(f"Status code: {response.status_code}")
+            raise Exception(response.status_code)
