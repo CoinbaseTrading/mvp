@@ -7,7 +7,6 @@ services:
       - PG_DATABASE
       - PG_USER
       - PG_PASSWORD
-      - DAYS_TO_LOAD=1
     command:
       - python
       - /app/load_candles.py

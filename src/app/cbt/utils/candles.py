@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 
-def yield_interval(last_time, lookback, granularity):
+def yield_interval(last_time, lookback, granularity=60):
     """Yield interval
 
     Args:
@@ -19,7 +19,7 @@ def yield_interval(last_time, lookback, granularity):
         yield t, t + timedelta(seconds=granularity)
 
 
-def yield_batch(last_time, lookback, granularity, max_batch_size=300):
+def yield_batch(last_time, lookback, granularity=60, max_batch_size=300):
     """Yield batch
 
     Args:
